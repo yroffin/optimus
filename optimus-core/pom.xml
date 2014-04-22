@@ -4,4 +4,10 @@
   <artifactId>optimus-core</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
+  <modules>
+  	<module>optimus-model</module>
+  	<module>optimus-application</module>
+  	<module>optimus-business</module>
+  	<module>optimus-engine</module>
+  </modules>
 </project>
