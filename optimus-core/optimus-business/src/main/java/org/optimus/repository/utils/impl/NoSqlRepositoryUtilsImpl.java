@@ -3,7 +3,7 @@ package org.optimus.repository.utils.impl;
 import java.util.List;
 import java.util.Set;
 
-import org.optimus.model.configuration.GenericMap;
+import org.optimus.model.event.GenericEvent;
 import org.optimus.nosql.NoSqlConn;
 import org.optimus.repository.utils.RepositoryUtils;
 
@@ -12,7 +12,7 @@ public class NoSqlRepositoryUtilsImpl implements RepositoryUtils {
 		return db.getCollectionNames();
 	}
 
-	public List<GenericMap> findCollection(NoSqlConn db, String name) {
+	public List<GenericEvent> findCollection(NoSqlConn db, String name) {
 		return db.getCollection(name);
 	}
 }

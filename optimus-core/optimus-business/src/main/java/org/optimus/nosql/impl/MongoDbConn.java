@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bson.BSONObject;
-import org.optimus.model.configuration.GenericMap;
+import org.optimus.model.event.GenericEvent;
 import org.optimus.nosql.NoSqlConn;
 
 import com.mongodb.DB;
@@ -25,22 +25,22 @@ public class MongoDbConn implements NoSqlConn {
 		return db.getCollectionNames();
 	}
 
-	public GenericMap fromBSONObject(GenericMap accu, BSONObject obj) {
+	public GenericEvent fromBSONObject(GenericEvent accu, BSONObject obj) {
 		for(String key : obj.keySet()) {
 			obj.get(key);
 		}
 		return accu;
 	}
 
-	public List<GenericMap> getCollection(String name) {
+	public List<GenericEvent> getCollection(String name) {
 		DBCollection coll = db.getCollection(name);
 
-		List<GenericMap> objects = new ArrayList<GenericMap>();
+		List<GenericEvent> objects = new ArrayList<GenericEvent>();
 		DBCursor cursor = coll.find();
 		try {
 		   while(cursor.hasNext()) {
 		       DBObject obj = cursor.next();
-		       objects.add(new GenericMap(obj.toMap()));
+		       objects.add(new GenericEvent(obj.toMap()));
 		   }
 		} finally {
 		   cursor.close();
