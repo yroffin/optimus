@@ -8,6 +8,7 @@ import org.bson.BSONObject;
 import org.optimus.model.event.GenericEvent;
 import org.optimus.nosql.NoSqlConn;
 
+import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
@@ -51,6 +52,15 @@ public class MongoDbConn implements NoSqlConn {
 
 	public void reset(String name) {
 		db.getCollection(name).drop();
+	}
+
+	public void store(String name, List<GenericEvent> list) {
+		DBCollection collection = db.getCollection(name);
+		DBObject arr;
+		for (GenericEvent event : list) {
+			arr = new BasicDBObject().append("string", event.toString());
+			collection.insert(arr);
+		}
 	}
 
 }

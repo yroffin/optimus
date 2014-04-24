@@ -18,6 +18,10 @@ public class GenericEvent {
 		members.put(key, value);
 	}
 
+	public Map toMap() {
+		return members;
+	}
+
 	@Override
 	public String toString() {
 		return "GenericEvent [members=" + members + "]";

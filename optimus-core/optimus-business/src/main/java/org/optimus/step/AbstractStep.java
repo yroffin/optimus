@@ -20,6 +20,7 @@ public abstract class AbstractStep implements Step {
 		throw new TechnicalException("Must be overriden !!!");
 	}
 
+	private boolean persistent = true;
 	private List<String> inputs = new ArrayList<String>();
 	private List<String> outputs = new ArrayList<String>();
 
@@ -63,6 +64,14 @@ public abstract class AbstractStep implements Step {
 
 	public List<String> getInputs() {
 		return inputs;
+	}
+
+	public boolean isPersistent() {
+		return persistent;
+	}
+
+	public void setPersistent(boolean persistent) {
+		this.persistent = persistent;
 	}
 
 	@Override

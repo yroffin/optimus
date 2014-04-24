@@ -47,6 +47,11 @@ public class OptimusBusinessImpl implements OptimusBusiness {
 			for (String key : out.keySet()) {
 				logger.info("Execute step {} produce {} event(s) on {} collection", step, out.get(key).size(), key);
 			}
+			if (step.isPersistent()) {
+				for (String key : out.keySet()) {
+					repository.store(conn, key, out.get(key));
+				}
+			}
 		}
 	}
 

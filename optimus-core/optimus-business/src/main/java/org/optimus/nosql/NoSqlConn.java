@@ -29,4 +29,12 @@ public interface NoSqlConn {
 	 */
 	void reset(String name);
 
+	/**
+	 * store on db
+	 * 
+	 * @param list
+	 * @param db
+	 */
+	void store(String name, List<GenericEvent> list);
+
 }

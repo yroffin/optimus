@@ -30,5 +30,13 @@ public interface RepositoryUtils {
 	 * @param conn
 	 * @param output
 	 */
-	public void reset(NoSqlConn conn, String output);
+	public void reset(NoSqlConn db, String name);
+
+	/**
+	 * store collection
+	 * 
+	 * @param list
+	 * @param conn
+	 */
+	public void store(NoSqlConn db, String name, List<GenericEvent> list);
 }

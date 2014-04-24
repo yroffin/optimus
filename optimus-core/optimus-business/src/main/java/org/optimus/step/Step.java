@@ -46,4 +46,11 @@ public interface Step {
 	 * @return
 	 */
 	public List<String> getOutputs();
+
+	/**
+	 * db persistence
+	 * 
+	 * @return
+	 */
+	public boolean isPersistent();
 }

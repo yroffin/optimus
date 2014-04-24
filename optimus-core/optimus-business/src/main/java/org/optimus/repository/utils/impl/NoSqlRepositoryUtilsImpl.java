@@ -19,4 +19,8 @@ public class NoSqlRepositoryUtilsImpl implements RepositoryUtils {
 	public void reset(NoSqlConn db, String name) {
 		db.reset(name);
 	}
+
+	public void store(NoSqlConn db, String name, List<GenericEvent> list) {
+		db.store(name, list);
+	}
 }
