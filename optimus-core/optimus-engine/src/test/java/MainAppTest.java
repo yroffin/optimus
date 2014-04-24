@@ -1,14 +1,12 @@
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 import org.optimus.engine.MainApp;
-import org.optimus.nosql.impl.NoSqlDriverException;
-
+import org.optimus.exception.FunctionnalException;
+import org.optimus.exception.TechnicalException;
 
 public class MainAppTest {
 
 	@Test
-	public void test() throws NoSqlDriverException {
+	public void test() throws TechnicalException, FunctionnalException {
 		MainApp.execute();
 	}
 

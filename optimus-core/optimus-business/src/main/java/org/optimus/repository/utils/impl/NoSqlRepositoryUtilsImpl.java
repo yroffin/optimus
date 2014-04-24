@@ -12,7 +12,11 @@ public class NoSqlRepositoryUtilsImpl implements RepositoryUtils {
 		return db.getCollectionNames();
 	}
 
-	public List<GenericEvent> findCollection(NoSqlConn db, String name) {
-		return db.getCollection(name);
+	public List<GenericEvent> findAll(NoSqlConn db, String name) {
+		return db.findAll(name);
+	}
+
+	public void reset(NoSqlConn db, String name) {
+		db.reset(name);
 	}
 }

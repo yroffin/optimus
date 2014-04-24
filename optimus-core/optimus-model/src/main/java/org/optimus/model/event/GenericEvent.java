@@ -17,4 +17,9 @@ public class GenericEvent {
 	public void put(String key, Object value) {
 		members.put(key, value);
 	}
+
+	@Override
+	public String toString() {
+		return "GenericEvent [members=" + members + "]";
+	}
 }

@@ -7,8 +7,26 @@ import org.optimus.model.event.GenericEvent;
 
 public interface NoSqlConn {
 
+	/**
+	 * get all collection in database
+	 * 
+	 * @return
+	 */
 	Set<String> getCollectionNames();
 
-	List<GenericEvent> getCollection(String name);
+	/**
+	 * find all elements
+	 * 
+	 * @param name
+	 * @return
+	 */
+	List<GenericEvent> findAll(String name);
+
+	/**
+	 * reset this collection
+	 * 
+	 * @param name
+	 */
+	void reset(String name);
 
 }

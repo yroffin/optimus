@@ -3,20 +3,20 @@ package org.optimus.job;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.optimus.connector.Connector;
+import org.optimus.step.Step;
 
 public abstract class AbstractJob implements Job {
-	protected List<Connector> connectors = new ArrayList<Connector>();
+	protected List<Step> steps = new ArrayList<Step>();
 
-	public void add(Connector e) {
-		connectors.add(e);
+	public void add(Step e) {
+		steps.add(e);
 	}
 
-	public List<Connector> getConnectors() {
-		return connectors;
+	public List<Step> getSteps() {
+		return steps;
 	}
 
-	public void setConnectors(List<Connector> connectors) {
-		this.connectors = connectors;
+	public void setSteps(List<Step> steps) {
+		this.steps = steps;
 	}
 }

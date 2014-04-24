@@ -11,9 +11,12 @@ public class DefaultJobImpl extends AbstractJob {
 		job.setName(name);
 	}
 
+	public String getName() {
+		return job.getName();
+	}
+
 	@Override
 	public String toString() {
 		return "DefaultJob [name=" + job + "]";
 	}
-
 }

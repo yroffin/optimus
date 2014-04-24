@@ -26,27 +26,31 @@ public class MongoDbConn implements NoSqlConn {
 	}
 
 	public GenericEvent fromBSONObject(GenericEvent accu, BSONObject obj) {
-		for(String key : obj.keySet()) {
+		for (String key : obj.keySet()) {
 			obj.get(key);
 		}
 		return accu;
 	}
 
-	public List<GenericEvent> getCollection(String name) {
+	public List<GenericEvent> findAll(String name) {
 		DBCollection coll = db.getCollection(name);
 
 		List<GenericEvent> objects = new ArrayList<GenericEvent>();
 		DBCursor cursor = coll.find();
 		try {
-		   while(cursor.hasNext()) {
-		       DBObject obj = cursor.next();
-		       objects.add(new GenericEvent(obj.toMap()));
-		   }
+			while (cursor.hasNext()) {
+				DBObject obj = cursor.next();
+				objects.add(new GenericEvent(obj.toMap()));
+			}
 		} finally {
-		   cursor.close();
+			cursor.close();
 		}
 
 		return objects;
+	}
+
+	public void reset(String name) {
+		db.getCollection(name).drop();
 	}
 
 }

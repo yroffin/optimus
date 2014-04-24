@@ -1,11 +1,16 @@
 package org.optimus.application.impl;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.optimus.application.OptimusApp;
-import org.optimus.connector.impl.SourceConnectorImpl;
+import org.optimus.engine.business.OptimusBusiness;
 import org.optimus.engine.business.impl.OptimusBusinessImpl;
+import org.optimus.exception.FunctionnalException;
+import org.optimus.exception.TechnicalException;
+import org.optimus.job.Job;
 import org.optimus.job.impl.DefaultJobImpl;
 import org.optimus.model.event.GenericEvent;
 import org.optimus.nosql.NoSqlConn;
@@ -14,52 +19,81 @@ import org.optimus.nosql.NoSqlDriverHelper;
 import org.optimus.nosql.impl.NoSqlDriverException;
 import org.optimus.repository.utils.RepositoryUtils;
 import org.optimus.repository.utils.impl.NoSqlRepositoryUtilsImpl;
+import org.optimus.step.Step;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
 
 public class OptimusAppImpl implements OptimusApp {
 	final static Logger logger = LoggerFactory.getLogger(OptimusAppImpl.class);
 
-	private OptimusBusinessImpl optimusBusiness;
+	private OptimusBusiness optimusBusiness;
 
 	public void setOptimusBusiness(OptimusBusinessImpl optimusBusinessImpl) {
 		this.optimusBusiness = optimusBusinessImpl;
 	}
 
 	private GenericEvent configuration;
-	RepositoryUtils repositoryUtils = new NoSqlRepositoryUtilsImpl();
+	RepositoryUtils repository = new NoSqlRepositoryUtilsImpl();
 
-	private List<DefaultJobImpl> jobs = new ArrayList<DefaultJobImpl>();
+	private List<Job> jobs = new ArrayList<Job>();
 
 	private NoSqlDriver driver;
 
-	private NoSqlConn conn;
-
-	public void init() throws NoSqlDriverException {
+	public void init() throws TechnicalException {
 		logger.info("Init");
+		// Init business
 		optimusBusiness.init();
-		driver = NoSqlDriverHelper.getDriver();
-		conn = driver.getConn("configuration");
+		try {
+			driver = NoSqlDriverHelper.getDriver();
+		} catch (NoSqlDriverException e) {
+			throw new TechnicalException(new SQLException(e));
+		}
+		// Allocate connection
+		NoSqlConn conn = driver.getConn("configuration");
 		// get jobs repository
-		for (GenericEvent job : repositoryUtils.findCollection(conn, "jobs")) {
-			DefaultJobImpl e = new DefaultJobImpl((String) job.get("name"));
-			BasicDBList connectors = (BasicDBList) job.get("connectors");
-			// add connectors
-			for (Object connector : connectors.toArray()) {
-
+		for (GenericEvent job : repository.findAll(conn, "jobs")) {
+			logger.info("Discover job '{}'", job.get("name"));
+			Job jobImpl = new DefaultJobImpl((String) job.get("name"));
+			jobs.add(jobImpl);
+			BasicDBList steps = (BasicDBList) job.get("steps");
+			logger.info("Discover {} step(s) for job {}", steps.size(), job.get("name"));
+			if (steps != null) {
+				// add connectors
+				Iterator<Object> it = steps.iterator();
+				while (it.hasNext()) {
+					BasicDBObject obj = (BasicDBObject) it.next();
+					String klass = obj.getString("class");
+					try {
+						logger.info("Instanciate class {}", klass);
+						Step newStep = (Step) Class.forName(klass).newInstance();
+						logger.info("Init class {}", klass);
+						newStep.init(obj.toMap());
+						logger.info("Add class {} to job {}", klass, jobImpl.getName());
+						jobImpl.add(newStep);
+					} catch (ClassNotFoundException e) {
+						throw new TechnicalException(e);
+					} catch (InstantiationException e) {
+						throw new TechnicalException(e);
+					} catch (IllegalAccessException e) {
+						throw new TechnicalException(e);
+					}
+				}
 			}
-			e.add(new SourceConnectorImpl("c:/temp/test", false));
-			jobs.add(e);
 		}
 	}
 
-	public void execute() {
-		logger.info("Execute jobs");
-		for (DefaultJobImpl job : jobs) {
-			logger.info("Execute business job {}", job);
-			optimusBusiness.execute(job);
+	public void execute() throws TechnicalException, FunctionnalException {
+		NoSqlConn conn = driver.getConn("application");
+
+		logger.info("Running {} jobs", jobs.size());
+		for (Job job : jobs) {
+			logger.info("Execute business job '{}'", job.getName());
+			optimusBusiness.execute(job, repository, conn);
+			logger.info("Execute business job '{}' done", job.getName());
 		}
+		logger.info("Running {} jobs done", jobs.size());
 	}
 }
