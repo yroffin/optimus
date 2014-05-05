@@ -3,6 +3,7 @@ package org.optimus.nosql;
 import java.util.List;
 import java.util.Set;
 
+import org.optimus.exception.TechnicalException;
 import org.optimus.model.event.GenericEvent;
 
 public interface NoSqlConn {
@@ -19,8 +20,9 @@ public interface NoSqlConn {
 	 * 
 	 * @param name
 	 * @return
+	 * @throws TechnicalException
 	 */
-	List<GenericEvent> findAll(String name);
+	List<GenericEvent> findAll(String name) throws TechnicalException;
 
 	/**
 	 * reset this collection
@@ -34,7 +36,8 @@ public interface NoSqlConn {
 	 * 
 	 * @param list
 	 * @param db
+	 * @throws TechnicalException
 	 */
-	void store(String name, List<GenericEvent> list);
+	void store(String name, List<GenericEvent> list) throws TechnicalException;
 
 }

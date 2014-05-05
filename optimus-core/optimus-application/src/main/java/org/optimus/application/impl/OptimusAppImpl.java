@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.optimus.application.OptimusApp;
 import org.optimus.engine.business.OptimusBusiness;
@@ -22,9 +23,6 @@ import org.optimus.repository.utils.impl.NoSqlRepositoryUtilsImpl;
 import org.optimus.step.Step;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
 
 public class OptimusAppImpl implements OptimusApp {
 	final static Logger logger = LoggerFactory.getLogger(OptimusAppImpl.class);
@@ -58,19 +56,20 @@ public class OptimusAppImpl implements OptimusApp {
 			logger.info("Discover job '{}'", job.get("name"));
 			Job jobImpl = new DefaultJobImpl((String) job.get("name"));
 			jobs.add(jobImpl);
-			BasicDBList steps = (BasicDBList) job.get("steps");
+			@SuppressWarnings("rawtypes")
+			List steps = (List) job.get("steps");
 			logger.info("Discover {} step(s) for job {}", steps.size(), job.get("name"));
 			if (steps != null) {
 				// add connectors
 				Iterator<Object> it = steps.iterator();
 				while (it.hasNext()) {
-					BasicDBObject obj = (BasicDBObject) it.next();
-					String klass = obj.getString("class");
+					Map obj = (Map) it.next();
+					String klass = (String) obj.get("class");
 					try {
 						logger.info("Instanciate class {}", klass);
 						Step newStep = (Step) Class.forName(klass).newInstance();
 						logger.info("Init class {}", klass);
-						newStep.init(obj.toMap());
+						newStep.init(obj);
 						logger.info("Add class {} to job {}", klass, jobImpl.getName());
 						jobImpl.add(newStep);
 					} catch (ClassNotFoundException e) {

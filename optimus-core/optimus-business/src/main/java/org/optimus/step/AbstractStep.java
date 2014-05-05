@@ -11,8 +11,6 @@ import org.optimus.step.impl.SourceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.mongodb.BasicDBList;
-
 public abstract class AbstractStep implements Step {
 	final static Logger logger = LoggerFactory.getLogger(SourceImpl.class);
 
@@ -25,14 +23,14 @@ public abstract class AbstractStep implements Step {
 	private List<String> outputs = new ArrayList<String>();
 
 	public void init(Map map) {
-		BasicDBList list = null;
-		list = (BasicDBList) map.get("outputs");
+		List list = null;
+		list = (List) map.get("outputs");
 		if (list != null) {
 			for (int i = 0; i < list.size(); i++) {
 				outputs.add((String) list.get(i));
 			}
 		}
-		list = (BasicDBList) map.get("inputs");
+		list = (List) map.get("inputs");
 		if (list != null) {
 			for (int i = 0; i < list.size(); i++) {
 				inputs.add((String) list.get(i));

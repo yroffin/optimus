@@ -8,7 +8,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,8 +43,13 @@ public class SourceImpl extends AbstractStep {
 			@Override
 			public FileVisitResult visitFile(Path aFile, BasicFileAttributes aAttrs) throws IOException {
 				logger.info("Processing file {}", aFile);
-				GenericEvent event = new GenericEvent(new HashMap());
-				event.put("file", aFile.toAbsolutePath());
+				GenericEvent event;
+				try {
+					event = new GenericEvent("{}");
+				} catch (TechnicalException e) {
+					throw new IOException(e);
+				}
+				event.put("file", aFile.toAbsolutePath().toString());
 				result.add(event);
 				return FileVisitResult.CONTINUE;
 			}

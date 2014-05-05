@@ -69,8 +69,9 @@ public class OptimusBusinessImpl implements OptimusBusiness {
 	 * @param repository
 	 * @param conn
 	 * @return
+	 * @throws TechnicalException
 	 */
-	private Map<String, List<GenericEvent>> findInputs(Step step, RepositoryUtils repository, NoSqlConn conn) {
+	private Map<String, List<GenericEvent>> findInputs(Step step, RepositoryUtils repository, NoSqlConn conn) throws TechnicalException {
 		Map<String, List<GenericEvent>> inputs = new HashMap<String, List<GenericEvent>>();
 		for (String input : step.getInputs()) {
 			List<GenericEvent> collection = repository.findAll(conn, input);

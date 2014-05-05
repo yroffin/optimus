@@ -1,10 +1,21 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>optimus</groupId>
-    <artifactId>optimus-core</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-  </parent>
-  <groupId>optimus-model</groupId>
-  <artifactId>optimus-model</artifactId>
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>optimus</groupId>
+		<artifactId>optimus-core</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	<artifactId>optimus-model</artifactId>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-core-lgpl</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-lgpl</artifactId>
+		</dependency>
+	</dependencies>
 </project>
